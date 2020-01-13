@@ -1,0 +1,51 @@
+plugins {
+    id 'java'
+    id 'application'
+    id 'com.github.johnrengelman.shadow' version '5.1.0'
+}
+
+repositories {
+    jcenter({})
+    mavenCentral()
+}
+
+// java version
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+def vertx_version = "3.8.4"
+def lombok_version = "1.18.10"
+def slf4j_api_version = "1.7.29"
+def log4j_version = "2.12.1"
+
+dependencies {
+    compile files("libs/oauth-sdk-1.0.0-all.jar")
+    compile "io.vertx:vertx-core:$vertx_version"
+    compile "io.vertx:vertx-web:$vertx_version"
+    compile "io.vertx:vertx-redis-client:$vertx_version"
+    compile "org.slf4j:slf4j-api:$slf4j_api_version"
+    compile "org.apache.logging.log4j:log4j-slf4j-impl:$log4j_version"
+    compile "org.apache.logging.log4j:log4j-core:$log4j_version"
+    compileOnly "org.projectlombok:lombok:$lombok_version"
+    annotationProcessor "org.projectlombok:lombok:$lombok_version"
+}
+
+sourceSets {
+  main {
+    java {
+      srcDirs = ["src/main/java"]
+    }
+  }
+}
+
+mainClassName = 'io.rcschat.oauth.client.Deployer'
+
+shadowJar {
+    archiveBaseName = 'oauth-client'
+    archiveVersion = '1.0.0'
+}
+
+// automatically install and use the specified gradle version to build
+task wrappers(type: Wrapper) {
+    gradleVersion = '6.0.1'
+}
